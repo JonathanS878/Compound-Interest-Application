@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Investment Page
+{% endblock %}
+
+{% block content %}
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-register" style="color:white">
+            {{ form.hidden_tag() }}
+            <img class="mb-4" src="https://img.freepik.com/premium-vector/reverse-israeli-silver-money-one-shekel-coin-with-nominal-date-inscription-israel-hebrew-arabic-english_218319-7461.jpg?w=2000" alt="">
+            <h1 class="h3 mb-3 font-weight-normal">
+                Please Enter Your New Investment
+            </h1>
+            <br>
+            {{ form.initial_deposit.label() }}
+            {{ form.initial_deposit(class="form-control", placeholder="Initial Deposit") }}
+
+            {{ form.monthly_deposit.label() }}
+            {{ form.monthly_deposit(class="form-control", placeholder="Monthly Deposit") }}
+
+            {{ form.yearly_interest.label() }}
+            {{ form.yearly_interest(class="form-control", placeholder="Yearly Interest") }}
+
+            {{ form.years_of_investment.label() }}
+            {{ form.years_of_investment(class="form-control", placeholder="Years of Investment") }}
+
+            <br>
+
+            <div class="checkbox mb-3">
+               <h6>See Existing Investments</h6>
+               <a class="btn btn-sm btn-secondary" href="{{ url_for('investments_page') }}">See Investments</a>
+            </div>
+
+            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+
+        </form>
+    </div>
+</body>
+{% endblock %}

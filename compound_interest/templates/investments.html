@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}
+Investments Page
+{% endblock %}
+{% block content %}
+
+<div class="row" style="margin-top:20px; margin-left:20px">
+   <table class="table table-hover table-dark">
+      <thead>
+         <tr>
+            <!-- Your Columns HERE -->
+            <th scope="col">Number</th>
+            <th scope="col">Initial Deposit</th>
+            <th scope="col">Monthly Deposit</th>
+            <th scope="col">Yearly Interest</th>
+            <th scope="col">Years of Investment</th>
+            <th scope="col">Total Deposit</th>
+            <th scope="col">Total Interest Gains</th>
+            <th scope="col">The Investment Value at the End</th>
+            <th scope="col">Options</th>
+         </tr>
+      </thead>
+      <tbody>
+         <!-- Your rows inside the table HERE: -->
+         {% for investment in investments %}
+         {{ counter = 1 }}
+         <tr>
+            <td>{{ counter }}</td>
+            <td>{{ investment.initial_deposit }}</td>
+            <td>{{ investment.monthly_deposit }}</td>
+            <td>{{ investment.yearly_interest }}</td>
+            <td>{{ investment.years_of_investment }}</td>
+            <td>{{ investment.total_deposit }}</td>
+            <td>{{ investment.total_interest }}</td>
+            <td>{{ investment.total_money }}$</td>
+            <td>
+               <button class="btn btn-outline btn-danger" href="{{ url_for('delete_investment') }}">Delete</button>
+               <button class="btn btn-outline btn-success" href="{{ url_for('add_investment_page') }}">Add</button>
+            </td>
+         </tr>
+         {{ counter+=1 }}
+         {% endfor %}
+      </tbody>
+   </table>
+</div>
+{% endblock %}
