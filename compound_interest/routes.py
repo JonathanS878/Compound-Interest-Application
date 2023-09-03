@@ -7,12 +7,16 @@ from flask_login import login_user, logout_user, login_required, current_user
 import bcrypt
 import uuid
 
+
+
 @app.route('/')
-@app.route('/home')
+@app.route('/home/')
 def home_page():
     return render_template('home.html')
 
-@app.route('/investments', methods=['GET', 'DELETE'])
+
+
+@app.route('/investments/', methods=['GET', 'DELETE'])
 @login_required
 def investments_page():
     form = DeleteInvestmentForm()
@@ -26,7 +30,9 @@ def investments_page():
         investments = db.investments.find({"user_id" : current_user._id})
         return render_template('investments.html', investments = investments, form = form)
 
-@app.route('/add_investment', methods=['GET', 'POST'])
+
+
+@app.route('/add_investment/', methods=['GET', 'POST'])
 @login_required
 def add_investment():
     form = AddInvestmentForm()
@@ -57,73 +63,7 @@ def add_investment():
 
 
 
-
-# @app.route('/add_investment', methods=['GET', 'POST'])
-# @login_required
-# def add_investment_page():
-#     form = AddInvestment
-#     if form.validate_on_submit():
-#         postedData = request.get_json()
-#         initial_deposit =  postedData["initial_deposit"]
-#         monthly_deposit =  postedData["monthly_deposit"]
-#         yearly_interest =  postedData["yearly_interest"]
-#         years_of_investment =  postedData["years_of_investment"]
-#         initial_deposit =  float(initial_deposit)
-#         monthly_deposit =  float(monthly_deposit)
-#         yearly_interest =  float(yearly_interest)
-#         years_of_investment =  int(years_of_investment)
-#         total_deposit, total_interest, total_money = calculate_compound_interest(initial_deposit, monthly_deposit, yearly_interest, years_of_investment)
-#         invest_counter = db.users.find({"username" : current_user})[0]["invest_counter"]
-#         invest_counter+=1
-#         db.users.updateOne({ "username" : current_user }, { set: {"invest_counter": invest_counter}})
-#         investment_to_add = {
-#             "id": 0,
-#             "initial_deposit": initial_deposit,
-#             "monthly_deposit": monthly_deposit, 
-#             "yearly_interest": yearly_interest, 
-#             "years_of_investment": years_of_investment, 
-#             "total_deposit": total_deposit, 
-#             "total_interest": total_interest, 
-#             "total_money": total_money
-#         }
-       
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if current_user.is_authenticated:
-#         return redirect(url_for('investments_page'))
-#     form = LoginForm()
-#     if form.validate_on_submit():
-#         user = User.objects(username=form.username.data).first()
-#         if user is None or not user.check_password(form.password.data):
-#             flash('Invalid username or password')
-#             return redirect(url_for('login_page'))
-#         login_user(user)
-#         next_page = request.args.get('investments_page')
-#         return redirect(url_for('investments_page'))
-#     return render_template('login.html', title='Sign In', form=form)
-
-# @app.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     return redirect(url_for('home_page'))
-
-# @app.route('/register', methods=['GET', 'POST'])
-# def register():
-#     if current_user.is_authenticated:
-#         return redirect(url_for('investments_page'))
-#     form = RegisterForm()
-#     if form.validate_on_submit():
-#         user = User(username=form.username.data, email=form.email.data)
-#         user.set_password(form.password.data)
-#         user.save()
-#         flash('Congratulations, you are now a registered user!')
-#         return redirect(url_for('login'))
-#     return render_template('register.html', title='Register', form=form)
-
-
-
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register/', methods=['GET', 'POST'])
 def register_page():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -150,7 +90,9 @@ def register_page():
 
     return render_template('register.html', form=form)
 
-@app.route('/login', methods=['GET', 'POST'])
+
+
+@app.route('/login/', methods=['GET', 'POST'])
 def login_page():
     form = LoginForm()
     if form.validate_on_submit():
@@ -167,7 +109,9 @@ def login_page():
     
     return render_template('login.html', form=form)
 
-@app.route('/logout')
+
+
+@app.route('/logout/')
 def logout_page():
     logout_user()
     flash("You have been logged out!", category='info')

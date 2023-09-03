@@ -1,21 +1,15 @@
-from compound_interest import login_manager
-from compound_interest import bcrypt
+from compound_interest import login_manager, bcrypt, db
 from flask_login import UserMixin
-from pymongo import MongoClient
 
-client = MongoClient("mongodb://0.0.0.0:27017")
-db = client["project-db"]
+
 
 @login_manager.user_loader
-def load_user(id):
-    return User.objects.get(id=id)
+def load_user(_id):
+    return User.objects.get(_id=_id)
+
+
 
 class User(UserMixin):
-    # _id = db.StringField(unique=True)
-    # username = db.StringField(max_length=30, required=True, unique=True)
-    # email = db.EmailField(required=True, unique=True)
-    # password = db.StringField(required=True)
-
     def __init__(self, _id, username, email, password):
         super(User, self).__init__()
         self._id = _id
@@ -36,16 +30,6 @@ class User(UserMixin):
 
 
 class Investment():
-    # _id = db.StringField(unique=True, required=True)
-    # user_id = db.ReferenceField(User, required=True)
-    # initial_deposit = db.FloatField(required=True)
-    # monthly_deposit = db.FloatField(required=True)
-    # yearly_interest = db.FloatField(required=True)
-    # years_of_investment = db.IntField(required=True)
-    # total_deposit = db.FloatField(required=True)
-    # total_interest = db.FloatField(required=True)
-    # total_money = db.FloatField(required=True)
-
     def __init__(self, _id, user_id, initial_deposit, monthly_deposit, yearly_interest, years_of_investment, total_deposit, total_interest, total_money):
         super(Investment, self).__init__()
         self._id = _id
@@ -57,6 +41,7 @@ class Investment():
         self.total_deposit = total_deposit
         self.total_interest = total_interest
         self.total_money = total_money
+
 
 
 def calculate_compound_interest(initial_deposit, monthly_deposit, yearly_interest, years_of_investment):    

@@ -1,18 +1,17 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, FloatField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
-from compound_interest.models import User, db
-
+from compound_interest import db
 
 class RegisterForm(FlaskForm):
     def validate_username(self, username_to_check):
-        user = db.users.find({"username": username_to_check})
-        if user:
+        user = db.users.find({"username": username_to_check}).count()
+        if user != 0:
             raise ValidationError('Username already exists! Please try a different username')
 
     def validate_email_address(self, email_address_to_check):
-        email = db.users.find({"email": email_address_to_check})
-        if email:
+        email = db.users.find({"email": email_address_to_check}).count()
+        if email != 0:
             raise ValidationError('Email Address already exists! Please try a different email address')
 
     username = StringField(label='User Name:', validators=[Length(min=2, max=30), DataRequired()])

@@ -4,8 +4,11 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-client = MongoClient("mongodb://0.0.0.0:27017")
-db = client["project-db"]
+
+client = MongoClient("mongodb://db:27017")
+db = client.ProjectDB
+users = db["Users"]
+investments = db["Investments"]
 
 app.config['SECRET_KEY'] = 'SHt@dLer8j7d8z3s2023' 
 
