@@ -1,8 +1,7 @@
-from compound_interest import app
+from compound_interest import app, db
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from compound_interest.models import User, Investment, calculate_compound_interest
 from compound_interest.forms import RegisterForm, LoginForm, DeleteInvestmentForm, AddInvestmentForm
-from compound_interest import db
 from flask_login import login_user, logout_user, login_required, current_user
 import bcrypt
 import uuid

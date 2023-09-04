@@ -5,13 +5,15 @@ from compound_interest import db
 
 class RegisterForm(FlaskForm):
     def validate_username(self, username_to_check):
-        user = db.users.find({"username": username_to_check}).count()
-        if user != 0:
+        users = list(db.users.find({"username": username_to_check}))
+        num_of_users = len(users)
+        if num_of_users != 0:
             raise ValidationError('Username already exists! Please try a different username')
 
     def validate_email_address(self, email_address_to_check):
-        email = db.users.find({"email": email_address_to_check}).count()
-        if email != 0:
+        emails = list(db.users.find({"email": email_address_to_check}))
+        num_of_emails = len(emails)
+        if num_of_emails != 0:
             raise ValidationError('Email Address already exists! Please try a different email address')
 
     username = StringField(label='User Name:', validators=[Length(min=2, max=30), DataRequired()])

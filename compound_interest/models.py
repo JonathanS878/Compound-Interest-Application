@@ -17,12 +17,6 @@ class User(UserMixin):
         self.email = email
         self.password = password
 
-    def isuserexist(self):
-        return (db.users.find({"username": self.username}).count()!=0)
-
-    def isemailexist(self):
-        return (db.users.find({"email": self.email}).count()!=0)
-
     def verifypw(self, password):
         hashed_pw = db.users.find({"username" : self.username})[0]["password"]
         return (bcrypt.hashpw(password.encode('utf8'), hashed_pw)==hashed_pw)
