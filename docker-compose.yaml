@@ -2,11 +2,11 @@ version: '3.9'
 services:
   flask-app:
     build:
-      context: .
+      context: ./flask-app
       dockerfile: Dockerfile
     container_name: flask-app
     ports:
-      - "80:5000"  # Map port 5000 in the container to port 80 on the host
+      - "5000:5000"  # Map port 5000 in the container to port 5000 on the host
     environment:
       # MONGO_URI: mongodb://0.0.0.0:27017/ # Replace with your MongoDB URI and database name
       APP_DEBUG: True
@@ -23,7 +23,9 @@ services:
       - flask-mongo
 
   mongo:
-    image: mongo
+    build:
+      context: ./mongo-db
+      dockerfile: Dockerfile
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -33,6 +35,7 @@ services:
       MONGO_INITDB_DATABASE: ProjectDB
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
+      SECRET_KEY: SHt@dLer8j7d8z3s2023
     volumes:
       - mongodbdata:/data/db
     networks:
