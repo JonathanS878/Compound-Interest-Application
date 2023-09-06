@@ -1,6 +1,6 @@
-from compound_interest import login_manager, bcrypt, db
+from compound_interest import login_manager, db
 from flask_login import UserMixin
-
+import bcrypt
 
 
 @login_manager.user_loader
@@ -10,6 +10,7 @@ def load_user(username):
         return None
     user = User(user_data["username"], user_data["email"], user_data["password"])
     return user
+
 
 
 class User(UserMixin):
@@ -23,24 +24,10 @@ class User(UserMixin):
         return str(self.username)
 
     def verifypw(self, password):
-        hashed_pw = db.users.find({"username" : self.username})[0]["password"]
-        return (bcrypt.hashpw(password.encode('utf8'), hashed_pw)==hashed_pw)
+        hashed_pw = db.users.find_one({"username": self.username})["password"]
+        return bcrypt.checkpw(password.encode('utf8'), hashed_pw)
 
-
-
-# class Investment():
-#     def __init__(self, _id, user_id, initial_deposit, monthly_deposit, yearly_interest, years_of_investment, total_deposit, total_interest, total_money):
-#         super(Investment, self).__init__()
-#         self._id = _id
-#         self.user_id = user_id
-#         self.initial_deposit = initial_deposit
-#         self.monthly_deposit = monthly_deposit
-#         self.yearly_interest = yearly_interest
-#         self.years_of_investment = years_of_investment
-#         self.total_deposit = total_deposit
-#         self.total_interest = total_interest
-#         self.total_money = total_money
-
+ 
 
 
 def calculate_compound_interest(initial_deposit, monthly_deposit, yearly_interest, years_of_investment):    

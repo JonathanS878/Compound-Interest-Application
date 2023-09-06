@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, FloatField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, FloatField, HiddenField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError, NumberRange
 from compound_interest import db
+
+
 
 class RegisterForm(FlaskForm):
     username = StringField(label='User Name:', validators=[Length(min=2, max=30), DataRequired()])
@@ -31,6 +33,8 @@ class LoginForm(FlaskForm):
     password = PasswordField(label='Password:', validators=[Length(min=6), DataRequired()])
     submit = SubmitField(label='Sign in')
 
+
+
 class AddInvestmentForm(FlaskForm):
     initial_deposit = FloatField(label='Initial Deposit:', validators=[DataRequired(), NumberRange(min=1)])
     monthly_deposit = FloatField(label='Monthly Deposit:', validators=[DataRequired(), NumberRange(min=1)])
@@ -38,6 +42,9 @@ class AddInvestmentForm(FlaskForm):
     years_of_investment = IntegerField(label='Years of Investment:', validators=[DataRequired(), NumberRange(min=1)])
     submit = SubmitField(label='Add Investment')
 
+
+
 class DeleteInvestmentForm(FlaskForm):
+    investment_id = HiddenField()
     submit = SubmitField(label='Delete')
 

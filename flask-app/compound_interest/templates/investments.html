@@ -3,12 +3,10 @@
 Investments Page
 {% endblock %}
 {% block content %}
-
-<div class="row" style="margin-top:20px; margin-left:20px">
+<div class="row" style="margin-top: 20px; margin-left: 20px">
    <table class="table table-hover table-dark">
       <thead>
          <tr>
-            <!-- Your Columns HERE -->
             <th scope="col">Number</th>
             <th scope="col">Initial Deposit</th>
             <th scope="col">Monthly Deposit</th>
@@ -21,20 +19,22 @@ Investments Page
          </tr>
       </thead>
       <tbody>
-         <!-- Your rows inside the table HERE: -->
-         {% for counter, investment in investments %}
+         {% for investment in investments %}
          <tr>
-            <td>{{ counter + 1 }}</td>
-            <td>{{ investment.initial_deposit }}</td>
-            <td>{{ investment.monthly_deposit }}</td>
-            <td>{{ investment.yearly_interest }}</td>
+            <td>{{ investment.counter }}</td>
+            <td>₪{{ investment.initial_deposit }}</td>
+            <td>₪{{ investment.monthly_deposit }}</td>
+            <td>%{{ investment.yearly_interest }}</td>
             <td>{{ investment.years_of_investment }}</td>
-            <td>{{ investment.total_deposit }}</td>
-            <td>{{ investment.total_interest }}</td>
-            <td>{{ investment.total_money }}$</td>
+            <td>₪{{ investment.total_deposit }}</td>
+            <td>₪{{ investment.total_interest }}</td>
+            <td>₪{{ investment.total_money }}</td>
             <td>
-               <button class="btn btn-outline btn-danger" href="{{ url_for('delete_investment') }}">Delete</button>
-               <button class="btn btn-outline btn-success" href="{{ url_for('add_investment_page') }}">Add</button>
+               <form method="POST" action="{{ url_for('investments_page') }}">
+                  <input type="hidden" name="investment_id" value="{{ investment.investment_id }}">
+                  <button type="submit" class="btn btn-outline btn-danger">Delete</button>
+               </form>
+               <a class="btn btn-outline btn-success" href="{{ url_for('add_investment_page') }}">Add</a>
             </td>
          </tr>
          {% endfor %}

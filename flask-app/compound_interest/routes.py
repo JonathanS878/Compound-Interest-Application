@@ -3,6 +3,7 @@ from flask import render_template, redirect, url_for, flash, request
 from compound_interest.models import User, calculate_compound_interest
 from compound_interest.forms import RegisterForm, LoginForm, DeleteInvestmentForm, AddInvestmentForm
 from flask_login import login_user, logout_user, login_required, current_user
+from bson import ObjectId
 import bcrypt
 
 
@@ -14,22 +15,37 @@ def home_page():
 
 
 
-@app.route('/investments/', methods=['GET', 'DELETE'])
+@app.route('/investments/', methods=['GET', 'POST'])
 @login_required
 def investments_page():
     form = DeleteInvestmentForm()
-    if request.method == "DELETE":
-        #Delete Investment Logic
-        pass
-
+    if request.method == "POST":
+        investment_id = request.form.get('investment_id')  # Get the investment ID from the form
+        db.investments.delete_one({"_id": ObjectId(investment_id)})
+        flash('Investment deleted successfully.', category='success')
         return redirect(url_for('investments_page'))
 
     if request.method == "GET":
-        current_user_id = str(db.users.find({"username": current_user.username})[0]["_id"])
-        investments = db.investments.find({"user_id" : current_user_id})
-        # if investments:
-        return render_template('investments.html', investments = investments, form = form)
-        # return render_template('investments.html', investments = None, form = form)
+        investments_data = db.investments.find({"username": current_user.username})
+        investments = []
+        for i, investment_data in enumerate(investments_data):
+            investment = {
+                "counter": i + 1,
+                "initial_deposit": investment_data.get("initial_deposit"),
+                "monthly_deposit": investment_data.get("monthly_deposit"),
+                "yearly_interest": investment_data.get("yearly_interest"),
+                "years_of_investment": investment_data.get("years_of_investment"),
+                "total_deposit": investment_data.get("total_deposit"),
+                "total_interest": investment_data.get("total_interest"),
+                "total_money": investment_data.get("total_money"),
+                "investment_id": investment_data.get("_id")
+            }
+            investments.append(investment)
+        if not investments:
+            flash('Couldn\'t find an investment to display, please add an investment.', category='info')
+            return redirect(url_for('add_investment_page'))
+
+        return render_template('investments.html', investments=investments, form=form)
 
 
 
@@ -70,7 +86,7 @@ def register_page():
         username=form.username.data
         email=form.email.data
         password=form.password1.data
-        hashed_pw = str(bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()))
+        hashed_pw = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
         user = User(
             username=username,
             email=email,
@@ -97,23 +113,28 @@ def register_page():
 def login_page():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.objects(username=form.username.data).first()
-        if user and user.verifypw(form.password.data):
-            login_user(user.username)
-            flash(f'Success! You are logged in as: {user.username}', category='success')
-            return redirect(url_for('investments_page'))
-        else:
-            flash('Username and password are not match! Please try again', category='danger')
-    elif form.errors != {}: #If there are not errors from the validations
+        username = form.username.data
+        user_data = db.users.find_one({"username": username})
+        if user_data:
+            user = User(
+                username=user_data.get("username"),
+                email=user_data.get("email"),
+                password=user_data.get("password")
+            )
+            if user.verifypw(form.password.data):
+                login_user(user)
+                flash(f'Success! You are logged in as: {username}', category='success')
+                return redirect(url_for('investments_page'))
+        flash('Username and password do not match. Please try again.', category='danger')
+    else:
         for err_msg in form.errors.values():
-            flash(f'There was an error with login: {err_msg}', category='danger')
-    
-    return render_template('login.html', form=form)
+            flash(f'There was an error with login attempt: {err_msg}', category='danger')
 
+    return render_template('login.html', form=form)
 
 
 @app.route('/logout/')
 def logout_page():
     logout_user()
-    flash("You have been logged out!", category='info')
+    flash("You have been logged out successfully!", category='info')
     return redirect(url_for('home_page'))
