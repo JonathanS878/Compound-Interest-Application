@@ -75,6 +75,7 @@ def add_investment_page():
     if form.errors != {}: #If there are not errors from the validations
         for err_msg in form.errors.values():
             flash(f'There was an error with creating an investment: {err_msg}', category='danger')
+            
     return render_template('add_investment.html', form=form)
 
 
@@ -82,7 +83,7 @@ def add_investment_page():
 @app.route('/register/', methods=['GET', 'POST'])
 def register_page():
     form = RegisterForm()
-    if form.validate_on_submit(): #and form.validate_username(form.username.data) and form.validate_email_address(form.email.data):
+    if form.validate_on_submit():
         username=form.username.data
         email=form.email.data
         password=form.password1.data
@@ -131,6 +132,7 @@ def login_page():
             flash(f'There was an error with login attempt: {err_msg}', category='danger')
 
     return render_template('login.html', form=form)
+
 
 
 @app.route('/logout/')

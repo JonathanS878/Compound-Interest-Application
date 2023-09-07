@@ -33,18 +33,24 @@ class LoginForm(FlaskForm):
     password = PasswordField(label='Password:', validators=[Length(min=6), DataRequired()])
     submit = SubmitField(label='Sign in')
 
+    def validate_username(self, field):
+        username_to_check = field.data
+        users = list(db.users.find({"username": username_to_check}))
+        num_of_users = len(users)
+        if num_of_users == 0:
+            raise ValidationError('Username does not exists!')
+
 
 
 class AddInvestmentForm(FlaskForm):
-    initial_deposit = FloatField(label='Initial Deposit:', validators=[DataRequired(), NumberRange(min=1)])
-    monthly_deposit = FloatField(label='Monthly Deposit:', validators=[DataRequired(), NumberRange(min=1)])
-    yearly_interest = FloatField(label='Yearly Interest:', validators=[DataRequired(), NumberRange(min=0.1)])
-    years_of_investment = IntegerField(label='Years of Investment:', validators=[DataRequired(), NumberRange(min=1)])
-    submit = SubmitField(label='Add Investment')
+    initial_deposit = FloatField(label='Initial Deposit:', validators=[DataRequired(), NumberRange(min=1, max=99999999)])
+    monthly_deposit = FloatField(label='Monthly Deposit:', validators=[DataRequired(), NumberRange(min=1, max=99999999)])
+    yearly_interest = FloatField(label='Yearly Interest:', validators=[DataRequired(), NumberRange(min=0.1, max=1000)])
+    years_of_investment = IntegerField(label='Years of Investment:', validators=[DataRequired(), NumberRange(min=1, max=100)])
+    submit = SubmitField(label='Add Investment')            
 
 
 
 class DeleteInvestmentForm(FlaskForm):
     investment_id = HiddenField()
     submit = SubmitField(label='Delete')
-
