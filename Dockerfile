@@ -4,7 +4,7 @@ FROM python:alpine3.18
 WORKDIR /app
 
 
-COPY . /app
+COPY ./flask-app /app
 
 
 RUN pip install -r requirements.txt
