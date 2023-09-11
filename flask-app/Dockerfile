@@ -7,10 +7,10 @@ WORKDIR /app
 COPY . /app
 
 
-RUN pip install -r requirements.txt
-
-
-EXPOSE 5000
+RUN apk update && apk upgrade && \
+    apk add build-base && \
+    apk add linux-headers && \
+    pip install -r requirements.txt
 
 
 ENV USER_NAME=""
@@ -18,4 +18,4 @@ ENV USER_PWD=""
 ENV DB_URL=""
 
 
-CMD ["python3", "run.py"]
+CMD ["uwsgi", "app.ini"]

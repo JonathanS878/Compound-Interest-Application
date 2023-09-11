@@ -3,23 +3,38 @@ services:
   flask-app:
     build:
       context: ./flask-app
-      dockerfile: Dockerfile
     container_name: flask-app
-    ports:
-      - "5000:5000" 
+    restart: always
     environment:
       USER_NAME: root
       USER_PWD: root_password
       DB_URL: mongo
+    expose:
+      - 8080
     depends_on:
       - mongo
     networks:
       - flask-mongo
+      - flask-nginx
+
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80" 
+    depends_on:
+      - flask-app
+    networks:
+      - flask-nginx
 
 
   mongo:
     image: mongo:7.0.1
     container_name: mongodb
+    restart: always
     ports:
       - "27017:27017"  
     environment:
@@ -35,6 +50,10 @@ services:
 
 networks:
   flask-mongo:
+    driver: bridge
+  flask-nginx:
+    driver: bridge
+
 
 volumes:
   mongodbdata:
