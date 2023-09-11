@@ -2,7 +2,7 @@ version: '3.9'
 services:
   flask-app:
     build:
-      context: .
+      context: ./flask-app
       dockerfile: Dockerfile
     container_name: flask-app
     ports:
@@ -39,47 +39,3 @@ networks:
 volumes:
   mongodbdata:
     driver: local
-
-
-# version: '3.9'
-# services:
-#   flask-app:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     container_name: flask-app
-#     ports:
-#       - "5000:5000"  # Map port 5000 in the container to port 5000 on the host
-#     environment:
-#       USER_NAME: root
-#       USER_PWD: root_password
-#       DB_URL: mongo  
-#     depends_on:
-#       - mongo
-#     networks:
-#       - flask-mongo
-
-#   mongo:
-#     image: mongo:7.0.1  
-#     container_name: mongodb
-#     ports:
-#       - "27017:27017"   # Map port 27017 in the container to port 27017 on the host
-#     environment:
-#       MONGO_INITDB_ROOT_USERNAME: root
-#       MONGO_INITDB_ROOT_PASSWORD: root_password
-#       MONGO_INITDB_DATABASE: ProjectDB
-#       MONGODB_DATA_DIR: /data/db
-#       MONDODB_LOG_DIR: /dev/null
-#     volumes:
-#       - mongodbdata:/data/db
-#     networks:
-#       - flask-mongo
-
-
-# networks:
-#   flask-mongo:
-
-
-# volumes:
-#   mongodbdata:
-#     driver: local
