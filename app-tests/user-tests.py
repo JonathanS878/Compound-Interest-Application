@@ -2,7 +2,7 @@ import pytest
 from flask_app.compound_interest import load_user, User, calculate_compound_interest
 
 # Define test cases for the load_user function
-def test_load_user_existing_user():
+def test_load_user_existing_user(monkeypatch):
     # Mock the database query to return user data
     mock_db_find_one = lambda username: {"username": username, "email": "test@example.com", "password": "hashed_password"}
     
@@ -16,7 +16,7 @@ def test_load_user_existing_user():
         assert user.username == "test_user"
         assert user.email == "test@example.com"
 
-def test_load_user_non_existing_user():
+def test_load_user_non_existing_user(monkeypatch):
     # Mock the database query to return None for non-existing user
     mock_db_find_one = lambda username: None
     

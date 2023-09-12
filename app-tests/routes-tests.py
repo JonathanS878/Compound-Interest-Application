@@ -39,5 +39,3 @@ def test_login_page():
 def test_logout_page():
     response = test_app.get('/logout/')
     assert response.status_code == 302  # Check if it redirects after logout
-
-# You can add more test cases for your functions as needed
