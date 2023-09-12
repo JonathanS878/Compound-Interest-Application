@@ -33,7 +33,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test User with pytest
       run: |
-        pytest /app-tests/user-tests.py
+        pytest app-tests/user-tests.py
     - name: Test Routes with pytest
       run: |
-        pytest /app-tests/routes-tests.py
+        pytest app-tests/routes-tests.py
