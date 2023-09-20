@@ -13,9 +13,10 @@ RUN apk update && apk upgrade && \
     pip install -r requirements.txt
 
 
-ENV USER_NAME=""
-ENV USER_PWD=""
-ENV DB_URL=""
+ENV HOST_NAME=""
+ENV MONGO_DB_USERNAME=""
+ENV MONGO_DB_PASSWORD=""
+ENV SECRET_KEY=""
 
 
 CMD ["uwsgi", "app.ini"]
