@@ -12,8 +12,8 @@ if secret_key is None:
     app.config['SECRET_KEY'] = "key_for_pytest_jonathan&binyamin"
 
 hostname = os.environ.get("HOST_NAME")
-username = os.environ.get("USER_NAME")
-password = os.environ.get("USER_PWD")
+username = os.environ.get("MONGO_DB_USERNAME")
+password = os.environ.get("MONGO_DB_PASSWORD")
 MONGO_URI = f"mongodb://{username}:{password}@{hostname}/"
 if hostname is not None or username is not None or password is not None:
     client = MongoClient(MONGO_URI)
