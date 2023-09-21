@@ -1,17 +1,15 @@
 from flask_login import FlaskLoginClient
-# from flask_wtf.csrf import CSRFProtect
 import pytest
 import bcrypt
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../application")))
 from compound_interest import app, db
-from compound_interest.models import User, load_user
-from compound_interest.routes import calculate_compound_interest
+from compound_interest.models import User
+
 
 app.test_client_class = FlaskLoginClient
-# csrf = CSRFProtect(app)
-# csrf.init_app(app, enable=False)
+
 
 @pytest.fixture
 def client():
@@ -66,6 +64,7 @@ def delete_investment():
     db.investments.drop()
 
 
+
 def test_home_page(client):
     response = client.get('/')
     assert response.status_code == 200
@@ -75,13 +74,13 @@ def test_home_page(client):
     assert b'Welcome to Jonathan and Binyamin Compound Interest Website' in response.data
 
 
+
 def test_register_page(client):
     response = client.get('/register/')
     assert response.status_code == 200
     assert b'Register Page' in response.data
 
     register_response = register(client, "testuser", "test@example.com", "password123")
-    load_user("testuser")
     assert b'Username already exists! Please try a different username' not in register_response.data
     assert b'Email Address already exists! Please try a different email address' not in register_response.data
     assert response.status_code == 200
@@ -91,6 +90,7 @@ def test_register_page(client):
     assert b'Username already exists! Please try a different username' in register_response.data
     assert b'Email Address already exists! Please try a different email address' in register_response.data
     delete_user()
+
 
 
 def test_login_page(client):
@@ -103,19 +103,24 @@ def test_login_page(client):
     assert b'Username does not exists!' not in login_response.data
     assert b'Username and password do not match. Please try again.' not in login_response.data
     assert login_response.status_code == 302 #Redirect to investments_page
+    assert login_response.headers['Location'] == 'http://localhost/investments/'
     delete_user()
 
     login_response = login(client, "testuser", "password123")
     assert b'Username does not exists!' in login_response.data    
     
 
+
 def test_logout_page(client):
     add_user()
-    login(client, 'testuser', 'password123')
+    login_response = login(client, 'testuser', 'password123')
+    assert login_response.status_code == 302 #Redirect to investments_page
+    assert login_response.headers['Location'] == 'http://localhost/investments/'
     response = client.get('/logout/')
-    assert response.status_code == 302 #redirect
+    assert response.status_code == 302 #redirect to home page
     assert response.headers['Location'] == 'http://localhost/home/'
     delete_user()
+
 
 
 def test_investments_page(client):
@@ -123,44 +128,45 @@ def test_investments_page(client):
     login(client, 'testuser', 'password123')
     
     add_investment()
+    assert len(list(db.investments.find({"username": "testuser"}))) == 1
+
     response = client.get('/investments/')
     assert response.status_code == 200
-    assert b'1000' and b'100' and b'5' and b'10' in response.data
+    assert b'1000' and b'100' and b'5' and b'10' and b'13000.0' and b'4412.19' and b'17412.19' in response.data 
 
+    investment_id = str(db.investments.find_one({"username": "testuser"})["_id"])
+    delete_investment_response = client.post('/investments/', data = {'investment_id': investment_id})
+    assert delete_investment_response.status_code == 302
+    assert delete_investment_response.headers['Location'] == 'http://localhost/investments/'
+
+    assert len(list(db.investments.find({"username": "testuser"}))) == 0
+    delete_investment()
     delete_user()
+
 
 
 def test_add_investment_page(client):
     add_user()
-    login_response = login(client, 'testuser', 'password123')
-    print(login_response.status_code)
-    print(login_response.data)
+    login(client, 'testuser', 'password123')
+    
     response = client.get('/add_investment/')
     assert response.status_code == 200
     assert b'Please Enter Your New Investment' in response.data
 
+    assert len(list(db.investments.find({"username": "testuser"}))) == 0
+    add_investment_response = response = client.post('/add_investment/', data = {"initial_deposit": 1000,"monthly_deposit": 100,"yearly_interest": 5,"years_of_investment": 10})
+    assert add_investment_response.status_code == 302
+    assert add_investment_response.headers['Location'] == 'http://localhost/investments/'
+
+    get_investment_response = client.get('/investments/')
+    assert get_investment_response.status_code == 200
+    assert b'1000' and b'100' and b'5' and b'10' and b'13000.0' and b'4412.19' and b'17412.19' in get_investment_response.data 
+    
+    assert len(list(db.investments.find({"username": "testuser"}))) == 1
+
+    delete_investment()
     delete_user()
 
-
-
-# def test_add_investment(client, login):
-#     login('testuser', 'password')
-#     response = client.post('/add_investment/', data={
-#         'initial_deposit': 1000,
-#         'monthly_deposit': 100,
-#         'yearly_interest': 5,
-#         'years_of_investment': 10
-#     }, follow_redirects=True)
-#     assert b'Investment added successfully.' in response.data
-
-
-# def test_delete_investment(client, login):
-#     login('testuser', 'password')
-#     # Assuming you have an investment to delete, get its ID
-#     investment_id = get_investment_id_for_deletion()  # Define this function
-
-#     response = client.post('/investments/', data={'investment_id': investment_id}, follow_redirects=True)
-#     assert b'Investment deleted successfully.' in response.data
 
 
 if __name__ == '__main__':

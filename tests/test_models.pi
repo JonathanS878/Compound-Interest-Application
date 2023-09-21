@@ -1,9 +1,10 @@
-import unittest
+import pytest
+import bcrypt
 import sys
 import os
-from mongomock import MongoClient as MockMongoClient, monkeypatch
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../application")))
-from compound_interest.models import load_user, User, calculate_compound_interest
+from compound_interest.models import User, calculate_compound_interest
+
 
 # Define test cases for the load_user function
 def test_load_user_existing_user(monkeypatch):
@@ -67,4 +68,4 @@ def test_user_class():
 
 
 if __name__ == '__main__':
-    unittest.main()
+    pytest.main()
