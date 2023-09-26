@@ -11,7 +11,7 @@ services:
       MONGO_DB_PASSWORD: shtadler
       SECRET_KEY: shT@bI3rU98RE7878
     expose:
-      - 8080
+      - 8000
     depends_on:
       - mongodb
     networks:
@@ -36,7 +36,6 @@ services:
     image: mongo:7.0.1
     container_name: mongodb
     restart: always
-    command: mongod --auth
     ports:
       - "27017:27017"  
     environment:
