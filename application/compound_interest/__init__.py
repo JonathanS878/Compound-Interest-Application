@@ -2,6 +2,7 @@ from flask import Flask
 from pymongo import MongoClient
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+from flask_wtf import CSRFProtect
 import os
 
 
@@ -11,7 +12,7 @@ app.config['SECRET_KEY'] = secret_key
 if secret_key is None:
     app.config['SECRET_KEY'] = "key_for_pytest_jonathan&binyamin"
 
-WTF_CSRF_CHECK_DEFAULT = False
+csrf = CSRFProtect(app)
 
 hostname = os.environ.get("HOST_NAME")
 username = os.environ.get("MONGO_DB_USERNAME")

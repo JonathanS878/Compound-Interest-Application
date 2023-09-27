@@ -13,6 +13,8 @@
                 Please Enter Your New Investment
             </h1>
             <br>
+            {{ form.csrf_token }}
+
             {{ form.initial_deposit.label() }}
             {{ form.initial_deposit(class="form-control", placeholder="Initial Deposit") }}
 
