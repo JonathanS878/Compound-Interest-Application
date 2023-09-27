@@ -12,15 +12,13 @@
             <h1 class="h3 mb-3 font-weight-normal">
                 Please Login
             </h1>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <br>
-            {{ form.csrf_token }}
-
             {{ form.username.label() }}
             {{ form.username(class="form-control", placeholder="User Name") }}
 
             {{ form.password.label() }}
             {{ form.password(class="form-control", placeholder="Password") }}
-
             <br>
             <div class="checkbox mb-3">
                <h6>Do not have an account?</h6>

@@ -10,6 +10,7 @@ class RegisterForm(FlaskForm):
     email = StringField(label='Email Address:', validators=[Email(), DataRequired()])
     password1 = PasswordField(label='Password:', validators=[Length(min=6), DataRequired()])
     password2 = PasswordField(label='Confirm Password:', validators=[EqualTo('password1'), DataRequired()])
+    csrf_token = HiddenField()
     submit = SubmitField(label='Create Account')
 
     def validate_username(self, field):
@@ -31,6 +32,7 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
     username = StringField(label='User Name:', validators=[DataRequired()])
     password = PasswordField(label='Password:', validators=[Length(min=6), DataRequired()])
+    csrf_token = HiddenField()
     submit = SubmitField(label='Sign in')
 
     def validate_username(self, field):
@@ -47,10 +49,12 @@ class AddInvestmentForm(FlaskForm):
     monthly_deposit = FloatField(label='Monthly Deposit:', validators=[DataRequired(), NumberRange(min=1, max=99999999)])
     yearly_interest = FloatField(label='Yearly Interest:', validators=[DataRequired(), NumberRange(min=0.1, max=1000)])
     years_of_investment = IntegerField(label='Years of Investment:', validators=[DataRequired(), NumberRange(min=1, max=100)])
+    csrf_token = HiddenField()
     submit = SubmitField(label='Add Investment')            
 
 
 
 class DeleteInvestmentForm(FlaskForm):
     investment_id = HiddenField()
+    csrf_token = HiddenField()
     submit = SubmitField(label='Delete')
