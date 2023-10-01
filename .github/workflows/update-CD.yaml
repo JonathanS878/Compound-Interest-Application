@@ -2,7 +2,7 @@ name: Update helm
 
 on:
   workflow_run:
-    workflows: ["Build and push image to dockerhub"]
+    workflows: ["Merge feature to main and build image"]
     types:
       - completed
       
