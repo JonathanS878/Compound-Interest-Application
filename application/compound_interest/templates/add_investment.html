@@ -12,7 +12,6 @@
             <h1 class="h3 mb-3 font-weight-normal">
                 Please Enter Your New Investment
             </h1>
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <br>
             {{ form.initial_deposit.label() }}
             {{ form.initial_deposit(class="form-control", placeholder="Initial Deposit") }}

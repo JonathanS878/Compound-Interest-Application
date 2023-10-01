@@ -1,0 +1,39 @@
+name: Update helm
+
+on:
+  workflow_run:
+    workflows: ["Build and push image to dockerhub"]
+    types:
+      - completed
+      
+jobs:
+  pull-repo:
+    runs-on: ubuntu-latest 
+  
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: feature
+      
+    - name: Get Commit Message
+      id: get_commit_message
+      run: echo "::set-output name=message::$(git log -1 --pretty=%B)"
+
+    - name: clone CD repo
+      uses: actions/checkout@v3
+      with:
+        repository: jonathans878/Compound-Interest-K8-GitOps
+        path: feature
+        ref: feature # Specify the branch to checkout
+        token: ${{ secrets.GIT_TOKEN }}
+    
+    - name: Commit and Push files
+      run: |
+        cd feature/helm/app-chart && ./update_image.sh ${{ secrets.DOCKER_USER }}/compound-interest:${{ steps.get_commit_message.outputs.message }}
+        git config --global user.email "jonatanshtadler@gmail.com"
+        git config --global user.name "jonathans878"
+        git add .
+        git status
+        git commit -m "updated image"
+        git push origin feature

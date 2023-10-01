@@ -1,0 +1,23 @@
+name: Merge feature to main
+
+on:
+  workflow_run:
+    workflows: ["Containerized Enviorment Test"]
+    types:
+      - completed
+      
+      
+jobs:
+  merge-main:
+    runs-on: ubuntu-latest 
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Merge to main
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        from_branch: feature
+        target_branch: main
+        github_token: ${{ secrets.GIT_TOKEN }}

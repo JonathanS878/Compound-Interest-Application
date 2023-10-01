@@ -1,10 +1,10 @@
-name: Unit testing python application
+name: Unit Tests
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "feature" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "feature" ]
 
 permissions:
   contents: read

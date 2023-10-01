@@ -32,7 +32,6 @@ Investments Page
             <td>
                <form method="POST" action="{{ url_for('investments_page') }}">
                   <input type="hidden" name="investment_id" value="{{ investment.investment_id }}">
-                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                   <button type="submit" class="btn btn-outline btn-danger">Delete</button>
                </form>
                <a class="btn btn-outline btn-success" href="{{ url_for('add_investment_page') }}">Add</a>

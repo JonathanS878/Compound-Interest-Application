@@ -5,12 +5,18 @@ from compound_interest import db
 
 
 
-class RegisterForm(FlaskForm):
+class BaseForm(FlaskForm):
+    class Meta:
+        # This overrides the value from the FlaskForm.
+        csrf = False
+
+
+
+class RegisterForm(BaseForm):
     username = StringField(label='User Name:', validators=[Length(min=2, max=30), DataRequired()])
     email = StringField(label='Email Address:', validators=[Email(), DataRequired()])
     password1 = PasswordField(label='Password:', validators=[Length(min=6), DataRequired()])
     password2 = PasswordField(label='Confirm Password:', validators=[EqualTo('password1'), DataRequired()])
-    csrf_token = HiddenField()
     submit = SubmitField(label='Create Account')
 
     def validate_username(self, field):
@@ -29,10 +35,9 @@ class RegisterForm(FlaskForm):
 
 
 
-class LoginForm(FlaskForm):
+class LoginForm(BaseForm):
     username = StringField(label='User Name:', validators=[DataRequired()])
     password = PasswordField(label='Password:', validators=[Length(min=6), DataRequired()])
-    csrf_token = HiddenField()
     submit = SubmitField(label='Sign in')
 
     def validate_username(self, field):
@@ -44,17 +49,15 @@ class LoginForm(FlaskForm):
 
 
 
-class AddInvestmentForm(FlaskForm):
+class AddInvestmentForm(BaseForm):
     initial_deposit = FloatField(label='Initial Deposit:', validators=[DataRequired(), NumberRange(min=1, max=99999999)])
     monthly_deposit = FloatField(label='Monthly Deposit:', validators=[DataRequired(), NumberRange(min=1, max=99999999)])
     yearly_interest = FloatField(label='Yearly Interest:', validators=[DataRequired(), NumberRange(min=0.1, max=1000)])
     years_of_investment = IntegerField(label='Years of Investment:', validators=[DataRequired(), NumberRange(min=1, max=100)])
-    csrf_token = HiddenField()
     submit = SubmitField(label='Add Investment')            
 
 
 
-class DeleteInvestmentForm(FlaskForm):
+class DeleteInvestmentForm(BaseForm):
     investment_id = HiddenField()
-    csrf_token = HiddenField()
     submit = SubmitField(label='Delete')
