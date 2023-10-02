@@ -1,4 +1,4 @@
-name: Merge feature to main and build image
+name: Merge feature to master and build&push image
 
 on:
   workflow_run:
@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-  merge-main:
+  merge-feature-master:
     runs-on: ubuntu-latest 
 
     steps:
@@ -27,7 +27,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
        ref: feature
       #  path: flask-app/

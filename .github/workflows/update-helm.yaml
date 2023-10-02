@@ -2,7 +2,7 @@ name: Update helm
 
 on:
   workflow_run:
-    workflows: ["Merge feature to main and build image"]
+    workflows: ["Merge feature to master and build&push image"]
     types:
       - completed
       
