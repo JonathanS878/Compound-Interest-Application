@@ -2,11 +2,11 @@
 
 This repository contains the source code for the DevOps application, which is a part of a larger ecosystem composed of three repositories:
 
- **Application** (Current repository): [Application Repo](https://github.com/BinyaminR/Application-compound-interest)
+ **Application** (Current repository): [Application Repo](https://github.com/JonathanS878/Compound-Interest-Application)
 
- **GitOps**: [GitOps Repo](https://github.com/BinyaminR/Gitops-compound-interest)
+ **GitOps**: [GitOps Repo](https://github.com/JonathanS878/Compound-Interest-K8-GitOps)
  
- **Infrastructure**: [Infrastructure Repo](https://github.com/BinyaminR/Infrastructure-compound-interest)
+ **Infrastructure**: [Infrastructure Repo](https://github.com/JonathanS878/Compound-Interest-GCP-Infrastructure)
  
 ## Application Overview
 
@@ -56,10 +56,13 @@ Once the changes are pushed to a feature branch, they are automatically tested u
 
 ## The application:
 
+## Application
+![Architecture](/images/application.png)<br>
+
 ## Architecture
 ![Architecture](/images/Devops-project.jpg)<br>
 
-## Deposit page
+## Add Investment page
 ![Investment](/images/invest-1.png)<br>
 
 ## Investments page
